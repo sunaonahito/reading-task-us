@@ -6,14 +6,9 @@
 (function () {
   'use strict';
 
-  // Seconds a participant must stay on each story part before "Continue" works.
-  // Set to 0 to turn the delay off (e.g. while testing).
-  var MIN_READ_SECONDS = 30;
-
   var screens = Array.prototype.slice.call(document.querySelectorAll('.screen'));
   var progress = document.getElementById('progress');
   var current = 0;
-  var timerId = null;
   var leaveGuardOn = false;
 
   function leaveGuard(event) {
@@ -31,42 +26,7 @@
     }
   }
 
-  function clearTimer() {
-    if (timerId !== null) {
-      window.clearInterval(timerId);
-      timerId = null;
-    }
-  }
-
-  function startReadTimer(screen) {
-    var button = screen.querySelector('[data-continue]');
-    var note = screen.querySelector('.timer');
-    if (!button || !note) {
-      return;
-    }
-    if (MIN_READ_SECONDS <= 0) {
-      button.disabled = false;
-      note.hidden = true;
-      return;
-    }
-    var remaining = MIN_READ_SECONDS;
-    button.disabled = true;
-    note.hidden = false;
-    note.textContent = 'You can continue in ' + remaining + ' seconds.';
-    timerId = window.setInterval(function () {
-      remaining -= 1;
-      if (remaining > 0) {
-        note.textContent = 'You can continue in ' + remaining + ' seconds.';
-        return;
-      }
-      clearTimer();
-      button.disabled = false;
-      note.textContent = 'You can continue now.';
-    }, 1000);
-  }
-
   function show(index) {
-    clearTimer();
     current = index;
     screens.forEach(function (screen, i) {
       screen.hidden = i !== index;
@@ -85,9 +45,6 @@
     if (heading) {
       heading.setAttribute('tabindex', '-1');
       heading.focus();
-    }
-    if (screen.hasAttribute('data-timed')) {
-      startReadTimer(screen);
     }
   }
 
