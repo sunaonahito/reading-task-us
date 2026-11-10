@@ -86,6 +86,13 @@
     next();
   }
 
+  // Parts 2-5 can go back to the previous part (answers typed so far are kept).
+  function onBack() {
+    if (current > 1) {
+      show(current - 1);
+    }
+  }
+
   document.getElementById('begin').addEventListener('click', function () {
     setLeaveGuard(true);
     next();
@@ -93,6 +100,10 @@
 
   Array.prototype.forEach.call(document.querySelectorAll('[data-continue]'), function (button) {
     button.addEventListener('click', onContinue);
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll('[data-back]'), function (button) {
+    button.addEventListener('click', onBack);
   });
 
   show(0);
